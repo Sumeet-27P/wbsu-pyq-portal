@@ -290,3 +290,14 @@ body {
     font-size: 13px;
     font-weight: bold;
 }
+
+
+
+
+/* Mobile Grid Fix */
+@media (max-width: 768px) {
+    .sem-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
+    }
+}

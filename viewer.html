@@ -5,39 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WBSU PDF Viewer</title>
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; display: flex; flex-direction: column; height: 100vh; }
+        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f1f5f9; display: flex; flex-direction: column; height: 100vh; }
         
         /* Light Theme Top Bar */
-        .viewer-header { background: #ffffff; color: #0f172a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .doc-title { font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+        .viewer-header { background: #ffffff; color: #0f172a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px solid #cbd5e1; }
+        .doc-title { font-weight: bold; font-size: 15px; }
         
         /* The Custom Buttons */
         .btn-group { display: flex; gap: 12px; }
-        .btn { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; border: none; transition: all 0.2s; }
+        .btn { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold; cursor: pointer; }
         .btn-print { background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; }
-        .btn-print:hover { background: #f1f5f9; color: #0f172a; border-color: #94a3b8; }
-        .btn-save { background: #4f46e5; color: white; }
-        .btn-save:hover { background: #4338ca; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3); }
-        .btn-close { background: #ef4444; color: white; }
-        .btn-close:hover { background: #dc2626; }
+        .btn-save { background: #4f46e5; color: white; border: none; }
+        .btn-close { background: #ef4444; color: white; border: none; }
+        
+        /* Mobile Fallback Button (Hidden on Laptops) */
+        .mobile-btn { display: none; text-align: center; background: #2563eb; color: white; padding: 15px; text-decoration: none; font-weight: bold; margin: 10px; border-radius: 8px; }
         
         /* The PDF Frame */
         #pdf-frame { width: 100%; flex-grow: 1; border: none; }
+
+        /* Magic rule: Show the mobile button ONLY if the screen is small */
+        @media (max-width: 768px) {
+            .mobile-btn { display: block; }
+        }
     </style>
 </head>
 <body>
-
     <div class="viewer-header">
         <div class="doc-title">
-            📄 <span id="pdf-title">Loading Document...</span>
+            <span id="pdf-title">Loading Document...</span>
         </div>
         <div class="btn-group">
-            <a href="#" id="print-btn" target="_blank" class="btn btn-print">Print / Open 🖨️</a>
-            <a href="#" id="save-btn" download class="btn btn-save">Save 💾</a>
-            <button onclick="history.back()" class="btn btn-close">Close X</button>
+            <a href="#" id="print-btn" target="_blank" class="btn btn-print">Print / Open</a>
+            <a href="#" id="save-btn" download class="btn btn-save">Save</a>
+            <button onclick="history.back()" class="btn btn-close">Close x</button>
         </div>
     </div>
 
+    <!-- This button appears ONLY on phones to bypass the PDF block -->
+    <a id="mobile-link" class="mobile-btn" href="#" target="_blank">📱 Tap Here to Open PDF on Mobile</a>
+
+    <!-- Laptops will still display the PDF normally here -->
     <iframe id="pdf-frame" src=""></iframe>
 
     <script>
@@ -49,12 +57,13 @@
             document.getElementById('pdf-frame').src = fileUrl;
             document.getElementById('print-btn').href = fileUrl;
             document.getElementById('save-btn').href = fileUrl;
-            
-            if (fileTitle) {
-                document.getElementById('pdf-title').innerText = fileTitle;
-            }
+            document.getElementById('mobile-link').href = fileUrl;
+        }
+        
+        if (fileTitle) {
+            document.getElementById('pdf-title').innerText = fileTitle;
         } else {
-            document.getElementById('pdf-title').innerText = "Error: Document Not Found";
+            document.getElementById('pdf-title').innerText = "Document";
         }
     </script>
 </body>
